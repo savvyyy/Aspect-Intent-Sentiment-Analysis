@@ -73,7 +73,7 @@ Intent Analysis acknowledges the intentions from the text. It can be any intenti
 
 This is a [BERT](https://github.com/google-research/bert) based model.
 
-Training and testing of Intent Analysis can requires GPU based system.
+Training and testing of Intent Analysis requires GPU based system.
  
 Run directly cell by cell ```intent.ipynb``` [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/savvyyy/Aspect-Intent-Sentiment-Analysis/blob/master/Intent_Analysis/intent_analysis.ipynb)
 
