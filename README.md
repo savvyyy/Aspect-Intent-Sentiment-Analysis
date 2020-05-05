@@ -30,13 +30,17 @@ main.py will start pointing to 127.0.0.1:5000. Run this url in postman to see th
 
 ## Description
 
-1. ```Sentiment Analysis :-``` Sentiment analysis refers to the use of natural language processing, text analysis, computational linguistics, and biometrics to systematically identify, extract, quantify, and study affective states and subjective information. It returns Polarity,relevance of subjectivity and Sentiment(Very Positive, Positive, Neutral, Negative, Very Negative ).
+### 1. Sentiment Analysis 
 
-2. ```Aspect Sentiment :-``` Aspect-based sentiment analysis is a text analysis technique that breaks down text into aspects (attributes or components of a product or service), and then allocates each one a sentiment level (positive, negative or neutral).
+Sentiment analysis refers to the use of natural language processing, text analysis, computational linguistics, and biometrics to systematically identify, extract, quantify, and study affective states and subjective information. It returns Polarity,relevance of subjectivity and Sentiment(Very Positive, Positive, Neutral, Negative, Very Negative ).
+
+### 2. Aspect Sentiment
+
+Aspect-based sentiment analysis is a text analysis technique that breaks down text into aspects (attributes or components of a product or service), and then allocates each one a sentiment level (positive, negative or neutral).
 Here’s a breakdown of what aspect-based sentiment analysis can extract :- a) Sentiments: positive or negative opinions about a particular aspect.
 b) Aspects: the thing or topic that is being talked about.
 
-### Process to Follow in Aspect Analysis
+#### Process to Follow in Aspect Analysis
 a. Download general embeddings from (GloVe:[http://nlp.stanford.edu/data/glove.840B.300d.zip](http://nlp.stanford.edu/data/glove.840B.300d.zip)). Rename it gen.vec and save it in folder: ```data/embedding/```
 
 Download restaurant and laptop domain embeddings from [here](https://drive.google.com/open?id=1gkeGnS-4_RufCjHu65FCq1zFORzdYmqy), save them in folder: ```data/embedding/```
@@ -61,10 +65,13 @@ f. To Evaluate the model :- If [UI](https://github.com/savvyyy/Sentiment-Analysi
 
 g. For Aspect Analysis in case of Twitter data, [N-E-R(Named Entity Recognition has been followed.)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)) which is also called ```IOB tagging```. Ouput can be seen in UI based on a hashtag search.
 
- 
-3. ```Intent Analysis :-```Intent Analysis acknowledges the intentions from the text. It can be any intentions such as the intention to sell, or intention to complain or intention to purchase etc.
+### 3. Intent Analysis
 
-### Process to Follow in Intent Analysis
+Intent Analysis acknowledges the intentions from the text. It can be any intentions such as the intention to sell, or intention to complain or intention to purchase etc.
+
+#### Process to Follow in Intent Analysis
+
+This is a [BERT](https://github.com/google-research/bert) based model.
 
 Training and testing of Intent Analysis can requires GPU based system.
  
