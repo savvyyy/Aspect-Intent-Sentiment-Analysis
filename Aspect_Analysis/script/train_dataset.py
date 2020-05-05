@@ -18,9 +18,7 @@ if CUDA:
 
 def batch_generator(X, y, X_tag, batch_size=128, return_idx=False, CUDA=False, crf=False, tag=False):
     for offset in range(0, X.shape[0], batch_size):
-        # Count sentence length (none zero element in each row of X)
         batch_X_len = np.sum(X[offset:offset+batch_size]!=0, axis=1)
-        # Order batch_X, batch_y by sentence length (descending)
         batch_idx = batch_X_len.argsort()[::-1]
         batch_X_len = batch_X_len[batch_idx]
         batch_X_mask = (X[offset:offset+batch_size]!=0)[batch_idx].astype(np.uint8) 
@@ -45,9 +43,8 @@ def batch_generator(X, y, X_tag, batch_size=128, return_idx=False, CUDA=False, c
             batch_X_tag_onehot = None
         
         if len(batch_y.size() )==2 and not crf:
-            # packing is used for seq to seq models with variable lengths
             batch_y=torch.nn.utils.rnn.pack_padded_sequence(batch_y, batch_X_len, batch_first=True)
-        if return_idx: #in testing, need to sort back.
+        if return_idx:
             yield (batch_X, batch_y, batch_X_len, batch_X_mask, batch_X_tag_onehot, batch_idx)
         else:
             yield (batch_X, batch_y, batch_X_len, batch_X_mask, batch_X_tag_onehot)
@@ -77,17 +74,17 @@ class Model(torch.nn.Module):
             self.crf=ConditionalRandomField(num_classes)            
           
     def forward(self, x, x_len, x_mask, x_tag, y=None, testing=False):
-        x_emb=torch.cat((self.gen_embedding(x), self.domain_embedding(x) ), dim=2)  # shape = [batch_size (128), sentence length (83), embedding output size (300+100)]       
-        x_emb=self.dropout(x_emb).transpose(1, 2)  # shape = [batch_size (128), embedding output size (300+100+tag_num) , sentence length (83)]
-        x_conv=torch.nn.functional.relu(torch.cat((self.conv1(x_emb), self.conv2(x_emb)), dim=1) )  # shape = [batch_size, 128+128, 83]
+        x_emb=torch.cat((self.gen_embedding(x), self.domain_embedding(x) ), dim=2)
+        x_emb=self.dropout(x_emb).transpose(1, 2)
+        x_conv=torch.nn.functional.relu(torch.cat((self.conv1(x_emb), self.conv2(x_emb)), dim=1) )
         x_conv=self.dropout(x_conv)
         x_conv=torch.nn.functional.relu(self.conv3(x_conv) )
         x_conv=self.dropout(x_conv)
         x_conv=torch.nn.functional.relu(self.conv4(x_conv) )
         x_conv=self.dropout(x_conv)
         x_conv=torch.nn.functional.relu(self.conv5(x_conv) )
-        x_conv=x_conv.transpose(1, 2) # shape = [batch_size, 83, 256]
-        x_logit=torch.nn.functional.relu(self.linear_ae1(torch.cat((x_conv, x_tag, self.domain_embedding(x)), dim=2) ) ) # shape = [batch_size, 83, 20]
+        x_conv=x_conv.transpose(1, 2)
+        x_logit=torch.nn.functional.relu(self.linear_ae1(torch.cat((x_conv, x_tag, self.domain_embedding(x)), dim=2) ) )
         x_logit=self.linear_ae2(x_logit)
         if testing:
             if self.crf_flag:
@@ -104,24 +101,20 @@ class Model(torch.nn.Module):
         return score
 
 def valid_loss(model, valid_X, valid_X_tag, valid_y, CUDA=False, crf=False, tag=False):
-    """calculate loss"""
-    # set to evaluation mode (dropout layer will be treated differently)
     model.eval()
     losses=[]
     for batch in batch_generator(valid_X, valid_y, valid_X_tag, CUDA=CUDA, crf=crf, tag=tag):
         batch_valid_X, batch_valid_y, batch_valid_X_len, batch_valid_X_mask, batch_valid_X_tag = batch
-        loss=model(batch_valid_X, batch_valid_X_len, batch_valid_X_mask, batch_valid_X_tag, batch_valid_y)  # loss for mini-batch
+        loss=model(batch_valid_X, batch_valid_X_len, batch_valid_X_mask, batch_valid_X_tag, batch_valid_y)
         losses.append(loss.data)
-    # set back to train mode
     model.train()
-    return sum(losses)/len(losses)  # average loss for mini-batch
+    return sum(losses)/len(losses)
 
 def train(train_X, train_X_tag, train_y, valid_X, valid_X_tag, valid_y, model, model_fn, optimizer, parameters, epochs=200, batch_size=128, CUDA=False, crf=False, tag=False):
     best_loss=float("inf") 
     valid_history=[]
     train_history=[]
     for epoch in range(epochs):
-        # iterate all batches and do grad descent
         for batch in batch_generator(train_X, train_y, train_X_tag, batch_size, CUDA=CUDA, crf=crf, tag=tag):
             batch_train_X, batch_train_y, batch_train_X_len, batch_train_X_mask, batch_train_X_tag=batch
             loss=model(batch_train_X, batch_train_X_len, batch_train_X_mask, batch_train_X_tag, batch_train_y)
@@ -129,18 +122,18 @@ def train(train_X, train_X_tag, train_y, valid_X, valid_X_tag, valid_y, model, m
             loss.backward()
             torch.nn.utils.clip_grad_norm(parameters, 1.)
             optimizer.step()
-        # train loss
+        
         loss=valid_loss(model, train_X, train_X_tag, train_y, CUDA=CUDA, crf=crf, tag=tag)
         train_history.append(loss)
-        # valid loss, print
+        
         loss=valid_loss(model, valid_X, valid_X_tag, valid_y, CUDA=CUDA, crf=crf, tag=tag)
         valid_history.append(loss)
         print("Epoch: %d, Loss: %f" %(epoch,loss))        
-        # save to a model file every time the new loss gets smaller than best record
+        
         if loss<best_loss:
             best_loss=loss
             torch.save(model, model_fn)
-        # shuffle train data
+        
         shuffle_idx=np.random.permutation(len(train_X) )
         train_X=train_X[shuffle_idx]
         train_y=train_y[shuffle_idx]
@@ -171,12 +164,11 @@ def run(domain, data_dir, model_dir, valid_split, runs, epochs, lr, dropout, CUD
         model=Model(gen_emb, domain_emb, 3, dropout=dropout, crf=crf, tag=tag)
         if CUDA:
             model.cuda()
-        parameters = [p for p in model.parameters() if p.requires_grad]  # all parameters in the model that requires grad
+        parameters = [p for p in model.parameters() if p.requires_grad]
         optimizer=torch.optim.Adam(parameters, lr=lr)
         train_history, valid_history=train(train_X, train_X_tag, train_y, valid_X, valid_X_tag, valid_y, model, model_dir+domain+str(r), optimizer, parameters, epochs, CUDA=CUDA, crf=crf, tag=tag)
-        # Saving the loss history:
         with open(model_dir+domain+str(r)+'_info.pkl', 'wb') as f: 
-            pickle.dump([train_history, valid_history], f)  # use pickle.load(f) for getting history
+            pickle.dump([train_history, valid_history], f)
     
 parser = argparse.ArgumentParser()
 
@@ -188,7 +180,7 @@ parser.add_argument('--batch_size', type=int, default=128)
 parser.add_argument('--epochs', type=int, default=200) 
 parser.add_argument('--runs', type=int, default=2)
 parser.add_argument('--data_dir', type=str, default="data/prep_data/"+args1.domain+'/')
-parser.add_argument('--valid', type=int, default=150) #number of validation data.
+parser.add_argument('--valid', type=int, default=150)
 parser.add_argument('--lr', type=float, default=0.0001) 
 parser.add_argument('--dropout', type=float, default=0.55) 
 parser.add_argument('--crf', type=bool, default=False) 

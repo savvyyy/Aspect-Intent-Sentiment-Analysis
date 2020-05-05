@@ -37,17 +37,17 @@ class Model(torch.nn.Module):
             self.crf=ConditionalRandomField(num_classes)            
           
     def forward(self, x, x_len, x_mask, x_tag, y=None, testing=False):
-        x_emb=torch.cat((self.gen_embedding(x), self.domain_embedding(x) ), dim=2)  # shape = [batch_size (128), sentence length (83), embedding output size (300+100)]       
-        x_emb=self.dropout(x_emb).transpose(1, 2)  # shape = [batch_size (128), embedding output size (300+100+tag_num) , sentence length (83)]
-        x_conv=torch.nn.functional.relu(torch.cat((self.conv1(x_emb), self.conv2(x_emb)), dim=1) )  # shape = [batch_size, 128+128, 83]
+        x_emb=torch.cat((self.gen_embedding(x), self.domain_embedding(x) ), dim=2)
+        x_emb=self.dropout(x_emb).transpose(1, 2)
+        x_conv=torch.nn.functional.relu(torch.cat((self.conv1(x_emb), self.conv2(x_emb)), dim=1) )
         x_conv=self.dropout(x_conv)
         x_conv=torch.nn.functional.relu(self.conv3(x_conv) )
         x_conv=self.dropout(x_conv)
         x_conv=torch.nn.functional.relu(self.conv4(x_conv) )
         x_conv=self.dropout(x_conv)
         x_conv=torch.nn.functional.relu(self.conv5(x_conv) )
-        x_conv=x_conv.transpose(1, 2) # shape = [batch_size, 83, 256]
-        x_logit=torch.nn.functional.relu(self.linear_ae1(torch.cat((x_conv, x_tag, self.domain_embedding(x)), dim=2) ) ) # shape = [batch_size, 83, 20]
+        x_conv=x_conv.transpose(1, 2)
+        x_logit=torch.nn.functional.relu(self.linear_ae1(torch.cat((x_conv, x_tag, self.domain_embedding(x)), dim=2) ) )
         x_logit=self.linear_ae2(x_logit)
         if testing:
             if self.crf_flag:
@@ -63,14 +63,6 @@ class Model(torch.nn.Module):
                 score=torch.nn.functional.nll_loss(torch.nn.functional.log_softmax(x_logit.data), y.data)
         return score
     
-# This is for color the output text
-class bcolors:
-    ONGREEN = '\x1b[6;30;42m'
-    ONYELLOW = '\x1b[6;30;46m'
-    ONRED = '\x1b[6;30;41m'
-    ONPURPLE = '\x1b[6;30;45m'
-    END = '\x1b[0m'
-
 def build_emb_dictionary(fn):
     words=[]
     vectors=[]
@@ -106,7 +98,7 @@ def prepare_embeddings(fn, gen_emb, embeddings, domain_emb, prep_dir, gen_dim=30
     prev_word.update(word_idx)          
     if new_word == []:
         return
-    # create embedding
+    
     embedding_gen=np.zeros((len(prev_word)+2, gen_dim) )
     embedding_domain=np.zeros((len(prev_word)+2, domain_dim) )    
     if os.path.exists(prep_dir+'gen.vec.npy'):
@@ -114,25 +106,19 @@ def prepare_embeddings(fn, gen_emb, embeddings, domain_emb, prep_dir, gen_dim=30
         embedding_gen[:gen_emb_prev.shape[0],:] = gen_emb_prev
     if os.path.exists(prep_dir+'gen.vec.npy'):
         domain_emb_prev=np.load(prep_dir+embeddings+'.npy')
-        # domain_emb_prev=np.load(prep_dir+'laptop_emb.vec.npy')
         embedding_domain[:domain_emb_prev.shape[0],:] = domain_emb_prev
     with open(gen_emb) as f:
-        # read the embedding .vec file
         for l in f:
             rec=l.rstrip().split(' ')
-            if len(rec)==2: #skip the first line.
+            if len(rec)==2:
                 continue 
-            # if the word in word_idx, fill the embedding
             if rec[0] in new_word:
                 embedding_gen[prev_word[rec[0]]] = np.array([float(r) for r in rec[1:] ])
     with open(domain_emb) as f:
-        # read the embedding .vec file
         for l in f:
-            # for each line, get the word and its vector
             rec=l.rstrip().split(' ')
-            if len(rec)==2: #skip the first line.
+            if len(rec)==2:
                 continue 
-            # if the word in word_idx, fill the embedding
             if rec[0] in new_word:
                 embedding_domain[prev_word[rec[0]]] = np.array([float(r) for r in rec[1:] ])
     ftmodel = load_model(domain_emb+".bin")
@@ -143,10 +129,9 @@ def prepare_embeddings(fn, gen_emb, embeddings, domain_emb, prep_dir, gen_dim=30
         outfile.write(json.dumps(prev_word)) 
     np.save(prep_dir+'gen.vec.npy', embedding_gen.astype('float32') )
     np.save(prep_dir+embeddings+'.npy', embedding_domain.astype('float32') )    
-    # np.save(prep_dir+'laptop_emb.vec.npy', embedding_domain.astype('float32') )    
+    
         
 def prepare_text(fn, POSdir, prep_dir):
-        # map part-of-speech tag to int
     pos_tag_list = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN', 'NNS','NNP', 'NNPS', 'PDT', 'POS', 'PRP', 'PRP$', 'RB', 'RBR', 'RBS', 'RP','SYM', 'TO', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WP$', 'WRB',',','.',':','$','#',"``","''",'(',')']
     tag_to_num = {tag:i+1 for i, tag in enumerate(sorted(pos_tag_list))}
 
@@ -177,7 +162,7 @@ def prepare_text(fn, POSdir, prep_dir):
             if len(token) > 0:
                 count = count + 1
                 raw_X.append(token)   
-                # write word index and tag in train_X and train_X_tag
+                
                 for wx, word in enumerate(token):
                     X[count, wx] = word_idx[word]
                     X_tag[count, wx] = pos_tag_stf[wx]
