@@ -14,7 +14,8 @@ utils/__pycache__/
 *.so
 
 #Binary files(Aspect Analysis)
-Aspect_Analysis/data/
+Aspect_Analysis/data/embedding
+Aspect_Analysis/data/prep_data
 Aspect_Analysis/demo/prep/
 
 #Binary File (Intent Analysis)
