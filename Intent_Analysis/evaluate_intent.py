@@ -20,7 +20,7 @@ class Evaluate_Intent:
         train = train.append(valid).reset_index(drop=True)
         classes = train.intent.unique().tolist()
 
-        model = load_model('/home/itadmin/Desktop/sentimentAnalysis/intent_analysis/intent_model.h5', custom_objects={"BertModelLayer": bert.BertModelLayer})
+        model = load_model('./intent_model.h5', custom_objects={"BertModelLayer": bert.BertModelLayer})
 
         pred_tokens = map(tokenizer.tokenize, text)
         pred_tokens = map(lambda tok: ["[CLS]"] + tok + ["[SEP]"], pred_tokens)
