@@ -1,0 +1,24 @@
+tweepy
+Flask
+flask_restful
+textblob
+pandas
+numpy
+# seaborn
+# matplotlib
+# wordcloud
+nltk
+stop-words
+# spacy
+vaderSentiment
+python-dotenv
+tensorflow
+flask-cors
+twython
+bert-tensorflow
+grpcio
+tensorflow-gpu
+tqdm
+bert-for-tf2
+torch
+fasttext

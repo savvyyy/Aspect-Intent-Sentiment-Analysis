@@ -1,0 +1,29 @@
+(base) itadmin@Aditya:~/Desktop/machine learning tutorials/Aspect Analysis$ python script/prepare_dataset.py --domain 'restaurant'
+Warning : `load_model` does not return WordVectorModel or SupervisedModel any more, but a `FastText` object which is very similar.
+finish sentence:  0
+finish sentence:  100
+finish sentence:  200
+finish sentence:  300
+finish sentence:  400
+finish sentence:  500
+finish sentence:  600
+finish sentence:  700
+finish sentence:  800
+finish sentence:  900
+finish sentence:  1000
+finish sentence:  1100
+finish sentence:  1200
+finish sentence:  1300
+finish sentence:  1400
+finish sentence:  1500
+finish sentence:  1600
+finish sentence:  1700
+finish sentence:  1800
+finish sentence:  1900
+finish sentence:  0
+finish sentence:  100
+finish sentence:  200
+finish sentence:  300
+finish sentence:  400
+finish sentence:  500
+finish sentence:  600
