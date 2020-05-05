@@ -41,29 +41,29 @@ Here’s a breakdown of what aspect-based sentiment analysis can extract :- a) S
 b) Aspects: the thing or topic that is being talked about.
 
 #### Process to Follow in Aspect Analysis
-a. Download general embeddings from (GloVe:[http://nlp.stanford.edu/data/glove.840B.300d.zip](http://nlp.stanford.edu/data/glove.840B.300d.zip)). Rename it gen.vec and save it in folder: ```data/embedding/```
+```a.``` Download general embeddings from (GloVe:[http://nlp.stanford.edu/data/glove.840B.300d.zip](http://nlp.stanford.edu/data/glove.840B.300d.zip)). Rename it gen.vec and save it in folder: ```data/embedding/```
 
 Download restaurant and laptop domain embeddings from [here](https://drive.google.com/open?id=1gkeGnS-4_RufCjHu65FCq1zFORzdYmqy), save them in folder: ```data/embedding/```
 
-b. ```Download Stanford POS Tagger :- ``` Download Stanford Log-linear Part-Of-Speech Tagger from [The Stanford Natural Language Processing Group](https://nlp.stanford.edu/software/tagger.shtml#Download) to folder and rename it as: ```stanford-posttagger-full/```
+```b. Download Stanford POS Tagger :- ``` Download Stanford Log-linear Part-Of-Speech Tagger from [The Stanford Natural Language Processing Group](https://nlp.stanford.edu/software/tagger.shtml#Download) to folder and rename it as: ```stanford-posttagger-full/```
 
-c. To prepare dataset :- Run ```cd Aspect_Analysis``` and then Run ```python script/prepare_dataset.py --domain "domain"```. Here domain are restaurant or laptop.
+```c.``` To prepare dataset :- Run ```cd Aspect_Analysis``` and then Run ```python script/prepare_dataset.py --domain "domain"```. Here domain are restaurant or laptop.
 
-d. After runing this script, you should expect to generate the following files in folder: data/prep_data
+```d.``` After runing this script, you should expect to generate the following files in folder: data/prep_data
 
  - word_idx.json (dictionary for words appeared in the dataset, map a word to a ID number)
 - gen.vec.npy, restaurant_emb.vec.npy (prepared embedding for words in word_idx)
 - restaurantTrain.npz, restaurantTest.npz (prepared training/text dataset extracted from the .xml files)
 
-e. To Train dataset :- Run ```python script/train_dataset.py --domain "domain"```.
+```e.``` To Train dataset :- Run ```python script/train_dataset.py --domain "domain"```.
 
 - Training would take around 12-14 hours on CPU(training has been done on CPU(haven't tested on GPU but GPU configuration has been added)).
 
 - Note:- You can skip this ```step e``` because pre-trained models of laptop and restaurant are already added to this repo.
 
-f. To Evaluate the model :- If [UI](https://github.com/savvyyy/Sentiment-Analysis-UI.git) is connected then to see the result run ```python main.py``` from root directory. If UI is not connected then to see the result in the terminal Run ```python script/evaluate_sample.py --domain "domain"```.
+```f.``` To Evaluate the model :- If [UI](https://github.com/savvyyy/Sentiment-Analysis-UI.git) is connected then to see the result run ```python main.py``` from root directory. If UI is not connected then to see the result in the terminal Run ```python script/evaluate_sample.py --domain "domain"```.
 
-g. For Aspect Analysis in case of Twitter data, [N-E-R(Named Entity Recognition has been followed.)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)) which is also called [IOB tagging](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)). Ouput can be seen in UI based on a hashtag search.
+```g.``` For Aspect Analysis in case of Twitter data, [N-E-R(Named Entity Recognition has been followed.)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)) which is also called [IOB tagging](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)). Ouput can be seen in UI based on a hashtag search.
 
 ### 3. Intent Analysis
 
@@ -79,7 +79,7 @@ Run directly cell by cell ```intent.ipynb``` [![Colab](https://colab.research.go
 
 Or
 
-a.) Open terminal and run following commands:- 
+Open terminal and run following commands:- 
 
 ```bash
 1. cd Intent_Analysis
