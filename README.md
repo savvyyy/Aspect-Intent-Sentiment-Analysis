@@ -63,7 +63,7 @@ e. To Train dataset :- Run ```python script/train_dataset.py --domain "domain"``
 
 f. To Evaluate the model :- If [UI](https://github.com/savvyyy/Sentiment-Analysis-UI.git) is connected then to see the result run ```python main.py``` from root directory. If UI is not connected then to see the result in the terminal Run ```python script/evaluate_sample.py --domain "domain"```.
 
-g. For Aspect Analysis in case of Twitter data, [N-E-R(Named Entity Recognition has been followed.)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)) which is also called ```IOB tagging```. Ouput can be seen in UI based on a hashtag search.
+g. For Aspect Analysis in case of Twitter data, [N-E-R(Named Entity Recognition has been followed.)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)) which is also called [IOB tagging](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)). Ouput can be seen in UI based on a hashtag search.
 
 ### 3. Intent Analysis
 
