@@ -94,6 +94,7 @@ For Training, Run
 ```python train_intent_model.py```
 
 For Evaluation, Run
+
 ```python evaluate_intent.py```
 
 ## UI
