@@ -54,7 +54,7 @@ def create_train_data(fn, word_idx_fn, out_dir, POSdir, domain, str_name='Train'
 
     
     corpus = []
-    corpus_tag = []
+    # corpus_tag = []
     opsList = []
     train_X = np.zeros((sent_num, sent_len), np.int16)
     train_X_tag = np.zeros((sent_num, sent_len), np.int16)

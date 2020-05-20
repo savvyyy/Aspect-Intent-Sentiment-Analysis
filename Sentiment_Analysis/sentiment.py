@@ -86,7 +86,7 @@ from utils.functions import calculatePolarity, getTwitterData
 
 
 
-def sentimentAnalysis(hashTagSubject):
+def sentimentAnalysis(hashTagSubject, source):
     print('hashTagSubject',hashTagSubject)
     polarity= []
     totalCount = 0
@@ -144,35 +144,40 @@ def sentimentAnalysis(hashTagSubject):
                 return {
                     'average': average,
                     'sentiment': 'positive',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average > 0.5 and average <= 1):
                 # print("very happy")
                 return {
                     'average': average,
                     'sentiment': 'very positive',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average == 0 or average == 0.0):
                 # print("Neutral")
                 return {
                     'average': average,
                     'sentiment': 'Neutral',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average < 0 and average > -0.5):
                 # print('Negative')
                 return {
                     'average': average,
                     'sentiment': 'Negative',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average < -0.5 and average > -1):
                 # print('Very Negative')
                 return {
                     'average': average,
                     'sentiment': 'Very Negative',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
         
         else:
@@ -229,35 +234,40 @@ def sentimentAnalysis(hashTagSubject):
                 return {
                     'average': average,
                     'sentiment': 'positive',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average > 0.5 and average <= 1):
                 # print("very happy")
                 return {
                     'average': average,
                     'sentiment': 'very positive',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average == 0 or average == 0.0):
                 # print("Neutral")
                 return {
                     'average': average,
                     'sentiment': 'Neutral',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average < 0 and average > -0.5):
                 # print('Negative')
                 return {
                     'average': average,
                     'sentiment': 'Negative',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
             elif(average < -0.5 and average > -1):
                 # print('Very Negative')
                 return {
                     'average': average,
                     'sentiment': 'Very Negative',
-                    'tweets': dataAll
+                    'text': dataAll,
+                    'source' : source
                 }
         
         else:

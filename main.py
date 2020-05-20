@@ -6,6 +6,7 @@ from intent import intentPrediction
 from Graph_Analysis.groupTweets import createGroup
 from flask_cors import CORS
 from Aspect_Analysis.aspect import getAspect, Model
+from Sentiment_Analysis.sentimentManual import sentimentData, calculatePolarity
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -17,14 +18,14 @@ class SentimentAnalysisResult(Resource):
 
     def get(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('hashtag', type=str, required=True)
+        parser.add_argument('text', type=str, required=True)
         parser.add_argument('source', type=str, required=True)
         args = parser.parse_args()
 
         if args.source == 'twitter':
-            return sentimentAnalysis('#'+args.hashtag), 200
+            return sentimentAnalysis('#'+args.text, args.source), 200
         else:
-            return {"error"}
+            return sentimentData(args.text, args.source), 200
 
 # class SentimentAnalysisAll(Resource):
 #     def __init__(self):
